@@ -1,15 +1,14 @@
-const fs = require('fs');
 const fsp = require('fs').promises;
 const path = require('path');
 
+const FOLDER_PATH = './files/';
 const VALID_EXT = ['jpg', 'png', 'gif', 'tiff'];
 const MAX_FILE_SIZE = 50000; // bytes
 
 async function run() {
-  const folderPath = './files/';
   try {
-    const files = await fsp.readdir(folderPath);
-    const hasValidFiles = await validateFiles(folderPath, files);
+    const files = await fsp.readdir(FOLDER_PATH);
+    const hasValidFiles = await validateFiles(FOLDER_PATH, files);
     if(hasValidFiles) {
         console.log("Has Valid Files");
     }
@@ -26,7 +25,7 @@ async function validateFiles(folderPath, files) {
         for (const file of files) {
           const filePath = path.join(folderPath, file);
           const stats = await fsp.stat(filePath);
-          const fileExt = file.split('.')[1];
+          const fileExt = file.split('.')[1].toLowerCase();
 
           if(!VALID_EXT.includes(fileExt) || stats.size > MAX_FILE_SIZE) {
             
